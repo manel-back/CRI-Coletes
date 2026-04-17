@@ -8,4 +8,7 @@
     <color name="div6">#060901</color>
     <color name="div7">#5E17EB</color>
     <color name="feminino">#FF66C4</color>
+    <color name="splash_background">#0F172A</color>
+    <color name="splash_accent">#FFFFFF</color>
+
 </resources>
