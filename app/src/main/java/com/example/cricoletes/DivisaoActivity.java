@@ -261,7 +261,7 @@ public class DivisaoActivity extends AppCompatActivity {
             case "vinho": return 0xFF800000;
             case "verde claro": return 0xFF90EE90;
             case "verde escuro": return 0xFF006400;
-            case "azul claro": return 0xFF87CEFA;
+            case "azul claro": return 0xFF00BFFF;
             case "azul escuro": return 0xFF00008B;
             case "cinza": return Color.GRAY;
             case "marrom": return 0xFF795548;
