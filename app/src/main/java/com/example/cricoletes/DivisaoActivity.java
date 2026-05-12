@@ -118,7 +118,7 @@ public class DivisaoActivity extends AppCompatActivity {
             listaTimes.add(new Time("Corinthiano Lanches", "branco", ""));
             listaTimes.add(new Time("FB27/Arrocha 38", "laranja", ""));
             listaTimes.add(new Time("Drogaria Bem Estar", "preto", ""));
-            listaTimes.add(new Time("Gelar Ar Cond.", "verde claro", ""));
+            listaTimes.add(new Time("Gelar Ar", "verde claro", ""));
             listaTimes.add(new Time("Líder Gases", "verde", "branco"));
             listaTimes.add(new Time("Odonto Goulart", "azul", ""));
             listaTimes.add(new Time("Gráfica Iporá/JH", "azul", ""));
