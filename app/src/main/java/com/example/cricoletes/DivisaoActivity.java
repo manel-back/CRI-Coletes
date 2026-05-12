@@ -130,8 +130,8 @@ public class DivisaoActivity extends AppCompatActivity {
         } else if ("4ª Divisão".equals(divisao)) {
             listaTimes.add(new Time("Bombeiros", "azul claro", ""));
             listaTimes.add(new Time("Beto Motos", "preto", "amarelo"));
-            listaTimes.add(new Time("Mega Motos/M.B Castro", "branco", ""));
-            listaTimes.add(new Time("Sofrência F.C", "laranja", ""));
+            listaTimes.add(new Time("Mega Motos/MB Castro", "branco", ""));
+            listaTimes.add(new Time("Sofrência FC", "cinza", ""));
             listaTimes.add(new Time("Baixada/Euro Agronegócio", "preto", ""));
             listaTimes.add(new Time("Cana Verde/Pronet", "verde", ""));
             listaTimes.add(new Time("Odonto Vitta", "amarelo", ""));
@@ -183,7 +183,7 @@ public class DivisaoActivity extends AppCompatActivity {
             listaTimes.add(new Time("Marlive/R. Car", "roxo", ""));
             listaTimes.add(new Time("Prime Clim./Funil.", "verde escuro", ""));
 //            listaTimes.add(new Time("Mister Pão", "cinza", ""));
-            listaTimes.add(new Time("MB Piso", "amarelo", ""));
+            listaTimes.add(new Time("MB Pisos/Tratorauto", "amarelo", ""));
             listaTimes.add(new Time("SAF Kaburezinho", "vermelho", ""));
             listaTimes.add(new Time("Construtora Freitas", "azul escuro", ""));
             listaTimes.add(new Time("Elcio Turismo", "verde claro", ""));
@@ -196,7 +196,7 @@ public class DivisaoActivity extends AppCompatActivity {
             listaTimes.add(new Time("BS Locações", "vermelho", ""));
             listaTimes.add(new Time("Bravo 64", "preto", ""));
             listaTimes.add(new Time("Celso Jóias", "preto", ""));
-            listaTimes.add(new Time("PH Cred F.", "azul", ""));
+            listaTimes.add(new Time("PH Cred", "azul", ""));
             listaTimes.add(new Time("Fazenda Lua", "preto", ""));
         }
     }
@@ -261,7 +261,7 @@ public class DivisaoActivity extends AppCompatActivity {
             case "vinho": return 0xFF800000;
             case "verde claro": return 0xFF90EE90;
             case "verde escuro": return 0xFF006400;
-            case "azul claro": return 0xFFADD8E6;
+            case "azul claro": return 0xFF87CEFA;
             case "azul escuro": return 0xFF00008B;
             case "cinza": return Color.GRAY;
             case "marrom": return 0xFF795548;
