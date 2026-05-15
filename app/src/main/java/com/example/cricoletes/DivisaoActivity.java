@@ -193,7 +193,7 @@ public class DivisaoActivity extends AppCompatActivity {
         } else if ("Feminino".equals(divisao)) {
             listaTimes.add(new Time("LL Pinturas", "vermelho", ""));
             listaTimes.add(new Time("Clínica CSI", "vermelho", ""));
-            listaTimes.add(new Time("BS Locações", "vermelho", ""));
+            listaTimes.add(new Time("PS Locações", "vermelho", ""));
             listaTimes.add(new Time("Bravo 64", "preto", ""));
             listaTimes.add(new Time("Celso Jóias", "preto", ""));
             listaTimes.add(new Time("PH Cred", "azul", ""));
