@@ -130,8 +130,8 @@ public class DivisaoActivity extends AppCompatActivity {
         } else if ("4ª Divisão".equals(divisao)) {
             listaTimes.add(new Time("Bombeiros", "azul claro", ""));
             listaTimes.add(new Time("Beto Motos", "preto", "amarelo"));
-            listaTimes.add(new Time("Mega Motos/MB Castro", "branco", ""));
-            listaTimes.add(new Time("Sofrência FC", "cinza", ""));
+            listaTimes.add(new Time("Mega Motos/HB Construtora", "branco", ""));
+            listaTimes.add(new Time("Sofrência FC", "cinza", "preto"));
             listaTimes.add(new Time("Baixada/Euro Agronegócio", "preto", ""));
             listaTimes.add(new Time("Cana Verde/Pronet", "verde", ""));
             listaTimes.add(new Time("Odonto Vitta", "amarelo", ""));
@@ -150,7 +150,7 @@ public class DivisaoActivity extends AppCompatActivity {
             listaTimes.add(new Time("JC Cred/Focus Cont", "laranja", ""));
             listaTimes.add(new Time("Bombeiros", "laranja", ""));
             listaTimes.add(new Time("Tavares Pinturas", "preto", ""));
-            listaTimes.add(new Time("BR Moto FC", "vermelho", "preto"));
+            listaTimes.add(new Time("BR Mota FC", "vermelho", "preto"));
             listaTimes.add(new Time("Rio Claro", "azul escuro", ""));
             listaTimes.add(new Time("Retif. União/MAD Centro Oeste", "vinho", ""));
             listaTimes.add(new Time("Transp. Melo/Nova Pharma", "verde claro", ""));
@@ -164,8 +164,8 @@ public class DivisaoActivity extends AppCompatActivity {
             listaTimes.add(new Time("Potente/Pague Menos", "azul claro", ""));
             listaTimes.add(new Time("Fazenda Paredão", "preto", ""));
             listaTimes.add(new Time("Agropecuária Santa Marta", "azul claro", "branco"));
-            listaTimes.add(new Time("Bar do Miltim", "rosa", ""));
-            listaTimes.add(new Time("Dean", "vermelho", ""));
+            listaTimes.add(new Time("Bar do Miltim", "roxo", ""));
+            listaTimes.add(new Time("Deam", "vermelho", ""));
             listaTimes.add(new Time("Center Tintas", "azul escuro", ""));
             listaTimes.add(new Time("Dentel Live", "vermelho", ""));
             listaTimes.add(new Time("Varandas/Nova Pharma", "amarelo", "preto"));
@@ -182,7 +182,6 @@ public class DivisaoActivity extends AppCompatActivity {
             listaTimes.add(new Time("Jacinto Engenharia", "amarelo", ""));
             listaTimes.add(new Time("Marlive/R. Car", "roxo", ""));
             listaTimes.add(new Time("Prime Clim./Funil.", "verde escuro", ""));
-//            listaTimes.add(new Time("Mister Pão", "cinza", ""));
             listaTimes.add(new Time("MB Pisos/Tratorauto", "amarelo", ""));
             listaTimes.add(new Time("SAF Kaburezinho", "vermelho", ""));
             listaTimes.add(new Time("Construtora Freitas", "azul escuro", ""));
@@ -252,14 +251,14 @@ public class DivisaoActivity extends AppCompatActivity {
             case "vermelho": return Color.RED;
             case "preto": return Color.BLACK;
             case "branco": return Color.WHITE;
-            case "verde": return Color.GREEN;
+            case "verde": return 0xFF4CAF50;
             case "azul": return Color.BLUE;
             case "amarelo": return Color.YELLOW;
-            case "laranja": return 0xFFFFA500;
+            case "laranja": return 0xFFEF6C00;
             case "roxo": return 0xFF800080;
             case "rosa": return 0xFFFF69B4;
             case "vinho": return 0xFF800000;
-            case "verde claro": return 0xFF90EE90;
+            case "verde claro": return 0xFF00FF00;
             case "verde escuro": return 0xFF006400;
             case "azul claro": return 0xFF00BFFF;
             case "azul escuro": return 0xFF00008B;
