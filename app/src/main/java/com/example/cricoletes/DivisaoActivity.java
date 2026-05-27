@@ -11,7 +11,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import android.view.View;
 import android.view.animation.Transformation;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,7 +20,6 @@ public class DivisaoActivity extends AppCompatActivity {
     LinearLayout container;
     ArrayList<Time> listaTimes;
     View itemAberto = null;
-    EditText inputBusca;
     ArrayList<Time> listaFiltrada;
 
     @Override
@@ -64,7 +62,7 @@ public class DivisaoActivity extends AppCompatActivity {
 
         carregarTimes(divisao);
 
-        java.util.Collections.sort(listaTimes, (t1, t2) -> t1.nome.compareToIgnoreCase(t2.nome));
+        listaTimes.sort((t1, t2) -> t1.nome.compareToIgnoreCase(t2.nome));
 
         for (Time t : listaTimes) {
             criarItem(t);
@@ -192,7 +190,7 @@ public class DivisaoActivity extends AppCompatActivity {
         } else if ("Feminino".equals(divisao)) {
             listaTimes.add(new Time("LL Pinturas", "vermelho", ""));
             listaTimes.add(new Time("Clínica CSI", "vermelho", ""));
-            listaTimes.add(new Time("PS Locações", "azul", ""));
+            listaTimes.add(new Time("PS Locações", "azul claro", "preto"));
             listaTimes.add(new Time("Bravo 64", "preto", ""));
             listaTimes.add(new Time("Celso Jóias", "preto", ""));
             listaTimes.add(new Time("PH Cred", "azul", ""));
