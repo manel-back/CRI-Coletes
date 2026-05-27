@@ -90,13 +90,13 @@ public class DivisaoActivity extends AppCompatActivity {
 
         if ("1ª Divisão".equals(divisao)) {
             listaTimes.add(new Time("SLD Agro", "preto", "verde"));
-            listaTimes.add(new Time("Gráfica Iporá", "preto", ""));
+            listaTimes.add(new Time("Gráfica Iporá/JH Consult AG", "preto", ""));
             listaTimes.add(new Time("Rio-Verdense Bebidas", "preto", ""));
             listaTimes.add(new Time("Vila Brasília", "amarelo", ""));
-            listaTimes.add(new Time("BR Tendas/Rezende", "branco", "verde"));
+            listaTimes.add(new Time("BR Tendas/Rezetec", "branco", "verde"));
             listaTimes.add(new Time("Farmácia Preço Baixo", "branco", ""));
             listaTimes.add(new Time("Arte Pharma", "vinho", "branco"));
-            listaTimes.add(new Time("MAGD Sport/Íris", "branco", ""));
+            listaTimes.add(new Time("MAGD Sport/Ibis", "branco", ""));
             listaTimes.add(new Time("Auto Posto Amorinópolis", "vermelho", ""));
             listaTimes.add(new Time("Premium Car Acessórios", "verde claro", ""));
             listaTimes.add(new Time("Amigos do Soquete", "branco", ""));
@@ -108,7 +108,7 @@ public class DivisaoActivity extends AppCompatActivity {
             listaTimes.add(new Time("BFF Bruno Ferreira", "azul escuro", ""));
             listaTimes.add(new Time("Fazenda Brejão", "verde escuro", ""));
             listaTimes.add(new Time("Funilaria Santos", "laranja", ""));
-            listaTimes.add(new Time("Macedo Engenharia/UP Mídia", "azul claro", ""));
+            listaTimes.add(new Time("Macedo Eng/UP Mídia", "azul claro", ""));
             listaTimes.add(new Time("Resenha FC", "preto", ""));
             listaTimes.add(new Time("R. Car", "preto", "vermelho"));
 
@@ -132,7 +132,7 @@ public class DivisaoActivity extends AppCompatActivity {
             listaTimes.add(new Time("Beto Motos", "preto", "amarelo"));
             listaTimes.add(new Time("Mega Motos/HB Construtora", "branco", ""));
             listaTimes.add(new Time("Sofrência FC", "cinza", "preto"));
-            listaTimes.add(new Time("Baixada/Euro Agronegócio", "preto", ""));
+            listaTimes.add(new Time("Baixada/Euro Agronegócios", "preto", ""));
             listaTimes.add(new Time("Cana Verde/Pronet", "verde", ""));
             listaTimes.add(new Time("Odonto Vitta", "amarelo", ""));
             listaTimes.add(new Time("Preço Baixo/Focus", "branco", ""));
@@ -140,14 +140,14 @@ public class DivisaoActivity extends AppCompatActivity {
             listaTimes.add(new Time("Caverna FC", "preto", ""));
             listaTimes.add(new Time("Empório Bueno Aires", "rosa", ""));
             listaTimes.add(new Time("Leão Jóias", "preto", ""));
-            listaTimes.add(new Time("Roma Limetal", "azul claro", ""));
+            listaTimes.add(new Time("Roma/Limetal", "azul claro", ""));
 
         } else if ("5ª Divisão".equals(divisao)) {
             listaTimes.add(new Time("Vivaz Motos", "preto", "amarelo"));
             listaTimes.add(new Time("Novo Tok", "azul claro", ""));
             listaTimes.add(new Time("Pronetlink", "amarelo", ""));
             listaTimes.add(new Time("Auto Peças União", "preto", ""));
-            listaTimes.add(new Time("JC Cred/Focus Cont", "laranja", ""));
+            listaTimes.add(new Time("JL Cred/Focus Contab", "laranja", ""));
             listaTimes.add(new Time("Bombeiros", "laranja", ""));
             listaTimes.add(new Time("Tavares Pinturas", "preto", ""));
             listaTimes.add(new Time("BR Mota FC", "vermelho", "preto"));
@@ -181,18 +181,18 @@ public class DivisaoActivity extends AppCompatActivity {
             listaTimes.add(new Time("Fazenda Santa Marta", "branco", ""));
             listaTimes.add(new Time("Jacinto Engenharia", "amarelo", ""));
             listaTimes.add(new Time("Marlive/R. Car", "roxo", ""));
-            listaTimes.add(new Time("Prime Clim./Funil.", "verde escuro", ""));
+            listaTimes.add(new Time("Prime Clim./Funilaria Anjo", "verde escuro", ""));
             listaTimes.add(new Time("MB Pisos/Tratorauto", "amarelo", ""));
-            listaTimes.add(new Time("SAF Kaburezinho", "vermelho", ""));
+            listaTimes.add(new Time("SAF da Kaburezinha", "vermelho", ""));
             listaTimes.add(new Time("Construtora Freitas", "azul escuro", ""));
-            listaTimes.add(new Time("Elcio Turismo", "verde claro", ""));
+            listaTimes.add(new Time("Elcio Tur/Xavante", "verde claro", ""));
             listaTimes.add(new Time("Solutech", "vermelho", ""));
             listaTimes.add(new Time("Shooter Clube de Tiros", "preto", ""));
 
         } else if ("Feminino".equals(divisao)) {
             listaTimes.add(new Time("LL Pinturas", "vermelho", ""));
             listaTimes.add(new Time("Clínica CSI", "vermelho", ""));
-            listaTimes.add(new Time("PS Locações", "vermelho", ""));
+            listaTimes.add(new Time("PS Locações", "azul", ""));
             listaTimes.add(new Time("Bravo 64", "preto", ""));
             listaTimes.add(new Time("Celso Jóias", "preto", ""));
             listaTimes.add(new Time("PH Cred", "azul", ""));
