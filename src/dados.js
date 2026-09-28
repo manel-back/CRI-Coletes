@@ -58,13 +58,7 @@ export function iniciar(aoMudar) {
     return;
   }
 
-  // No Firebase Hosting o login usa o próprio domínio do site, o que evita o bloqueio
-  // de cookies de terceiros do Safari/iOS durante o login.
-  const hospedadoNoFirebase = /\.(web\.app|firebaseapp\.com)$/.test(location.hostname);
-  const app = initializeApp({
-    ...firebaseConfig,
-    authDomain: hospedadoNoFirebase ? location.hostname : firebaseConfig.authDomain,
-  });
+  const app = initializeApp(firebaseConfig);
   db = initializeFirestore(app, {
     localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
   });
@@ -213,9 +207,13 @@ export function mensagemDeErro(e) {
       return 'Sem conexão com o servidor. Tente de novo em instantes.';
     case 'auth/network-request-failed':
       return 'Sem internet para fazer login.';
+    case 'auth/operation-not-allowed':
+    case 'auth/configuration-not-found':
+      return 'O login com Google não está ativado no Firebase (Authentication → Método de login → Google).';
     case 'auth/unauthorized-domain':
       return 'Este endereço não está autorizado no Firebase (Authentication → Settings → Authorized domains).';
     default:
-      return 'Algo deu errado. Tente novamente.';
+      // O código ajuda a descobrir a causa quando alguém relata o problema.
+      return `Algo deu errado. Tente novamente.${e?.code ? ` (${e.code})` : ''}`;
   }
 }
