@@ -35,31 +35,19 @@ Você precisa de [Node.js](https://nodejs.org) 20 ou mais novo e de uma conta Go
    escolha a região `southamerica-east1 (São Paulo)` e o modo **produção**.
 3. **Login:** em *Build → Authentication → Começar*, ative o provedor **Google**.
 4. **App Web:** em *Configurações do projeto* (engrenagem) → *Seus apps* → ícone `</>`, registre
-   um app (pode chamar de "CRI Coletes"). Copie o objeto `firebaseConfig` que aparece e cole em
-   `src/firebase-config.js`, no lugar de `null`:
-
-   ```js
-   export const firebaseConfig = {
-     apiKey: '...',
-     authDomain: 'seu-projeto.firebaseapp.com',
-     projectId: 'seu-projeto',
-     storageBucket: '...',
-     messagingSenderId: '...',
-     appId: '...',
-   };
-   ```
-
+   um app e copie o objeto `firebaseConfig` para `src/firebase-config.js`. O projeto
+   `campeonato-society-cri` já está configurado nesse arquivo e no `.firebaserc`; só refaça
+   este passo se trocar de projeto (atualize também o `.firebaserc`).
 5. **Publicar** (no terminal, dentro da pasta do projeto):
 
    ```bash
    npm install
-   npx firebase login
-   npx firebase use --add        # escolha o projeto criado no passo 1
+   npx firebase login            # entre com a conta Google dona do projeto
    npm run deploy                # publica o site e as regras de segurança
    ```
 
-   O endereço do site aparece no final (ex.: `https://seu-projeto.web.app`). É esse link que você
-   manda para os gandulas.
+   O endereço do site aparece no final (<https://campeonato-society-cri.web.app>). É esse link
+   que você manda para os gandulas.
 
 6. **Virar o Criador:** abra o site, toque no ícone de conta e **entre com o Google**. Depois, no
    Console do Firebase, vá em *Firestore Database → usuarios →* (o documento com o seu e-mail) e
