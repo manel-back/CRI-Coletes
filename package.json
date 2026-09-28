@@ -1,0 +1,23 @@
+{
+  "name": "cri-coletes",
+  "private": true,
+  "version": "2.0.0",
+  "description": "Consulta das cores dos uniformes dos times do campeonato do CRI.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test tests/logica.test.js",
+    "test:regras": "firebase emulators:exec --only firestore --project demo-cri-coletes \"node --test tests/regras.test.js\"",
+    "deploy": "firebase deploy"
+  },
+  "dependencies": {
+    "firebase": "^12.19.0"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.2",
+    "firebase-tools": "^15.31.0",
+    "vite": "^8.3.1"
+  }
+}
