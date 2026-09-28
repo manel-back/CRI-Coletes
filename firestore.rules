@@ -5,13 +5,24 @@ rules_version = '2';
 //   Administrador: edita times, divisões e o título do campeonato.
 //   Criador: tudo do administrador + promove/rebaixa usuários (usuario <-> admin).
 // O papel "criador" nunca pode ser dado pelo site: é definido uma única vez no Console do Firebase.
+// Só contas Google com e-mail verificado contam: contas criadas de outro jeito (e-mail/senha,
+// anônimas) são tratadas como visitantes, mesmo que o provedor esteja ativo no Console.
 
 service cloud.firestore {
   match /databases/{banco}/documents {
 
+    function contaGoogle() {
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider == 'google.com'
+        && request.auth.token.email_verified == true;
+    }
+
+    function meuPerfil() {
+      return /databases/$(banco)/documents/usuarios/$(request.auth.uid);
+    }
+
     function papel() {
-      let caminho = /databases/$(banco)/documents/usuarios/$(request.auth.uid);
-      return request.auth != null && exists(caminho) ? get(caminho).data.papel : 'visitante';
+      return contaGoogle() && exists(meuPerfil()) ? get(meuPerfil()).data.papel : 'visitante';
     }
 
     function ehAdmin() {
@@ -40,7 +51,7 @@ service cloud.firestore {
         && (d.cores.size() < 2 || corValida(d.cores[1]))
         && (d.cores.size() < 3 || corValida(d.cores[2]))
         && d.atualizadoEm == request.time
-        && d.atualizadoPor is string && d.atualizadoPor.size() <= 100;
+        && d.atualizadoPor == get(meuPerfil()).data.nome;
     }
 
     function divisaoValida(d) {
@@ -68,24 +79,31 @@ service cloud.firestore {
         && request.resource.data.subtitulo is string && request.resource.data.subtitulo.size() <= 40;
     }
 
+    // O e-mail mostrado na tela Equipe tem que ser o da conta Google (evita alguém se passar
+    // por outra pessoa) e a foto só pode vir do Google (evita rastrear quem abre a tela Equipe).
+    function perfilValido(d) {
+      return texto(d.nome, 100)
+        && d.email == request.auth.token.email
+        && d.foto is string
+        && (d.foto == '' || (d.foto.size() <= 1000 && d.foto.matches('^https://[a-z0-9-]+[.]googleusercontent[.]com/.*')));
+    }
+
     match /usuarios/{uid} {
       // Cada um lê o próprio perfil; o criador lê todos (tela Equipe).
-      allow read: if request.auth != null && (request.auth.uid == uid || papel() == 'criador');
+      allow read: if contaGoogle() && (request.auth.uid == uid || papel() == 'criador');
 
       // Primeiro login: o perfil nasce sempre como "usuario".
-      allow create: if request.auth != null && request.auth.uid == uid
+      allow create: if contaGoogle() && request.auth.uid == uid
         && request.resource.data.keys().hasOnly(['nome', 'email', 'foto', 'papel', 'criadoEm'])
         && request.resource.data.papel == 'usuario'
         && request.resource.data.criadoEm == request.time
-        && texto(request.resource.data.nome, 100)
-        && request.resource.data.email is string && request.resource.data.foto is string;
+        && perfilValido(request.resource.data);
 
-      allow update: if request.auth != null && (
+      allow update: if contaGoogle() && (
         // A própria pessoa só atualiza nome, e-mail e foto (nunca o papel).
         (request.auth.uid == uid
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nome', 'email', 'foto'])
-          && texto(request.resource.data.nome, 100)
-          && request.resource.data.email is string && request.resource.data.foto is string)
+          && perfilValido(request.resource.data))
         ||
         // O criador promove/rebaixa outras pessoas entre usuario e admin.
         (papel() == 'criador' && request.auth.uid != uid

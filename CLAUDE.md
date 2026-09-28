@@ -39,6 +39,9 @@ Antes de commitar: `npm test`, `npm run build` e, se mexer em `firestore.rules`,
 - `admin`: edita times, divisões e config.
 - `criador`: tudo do admin + promove/rebaixa entre `usuario` e `admin` (tela Equipe).
 - O papel `criador` **nunca** é concedido pelo site; só manualmente no Console do Firebase.
+- Só contam contas **Google com e-mail verificado** (`contaGoogle()`): contas de e-mail/senha ou
+  anônimas são tratadas como visitantes. O `email` do perfil tem que ser o da conta, a `foto` só pode
+  ser de `*.googleusercontent.com` e `atualizadoPor` tem que ser o nome do perfil de quem edita.
 Ao mudar campos de um documento, atualize juntos: `dados.js`, `firestore.rules` e os testes.
 
 ## Regras do dono do projeto

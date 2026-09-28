@@ -19,16 +19,25 @@ import { DIVISOES_INICIAIS, montarTimesIniciais } from '../src/dados-iniciais.js
 
 let ambiente;
 
-const time = (extra = {}) => ({
+// Nos testes, o nome de cada perfil é igual ao uid (ver beforeEach).
+const time = (autor, extra = {}) => ({
   nome: 'Time Teste',
   divisaoId: 'div1',
   cores: [{ nome: 'Preto', hex: '#111111' }],
   atualizadoEm: serverTimestamp(),
-  atualizadoPor: 'Fulano',
+  atualizadoPor: autor,
   ...extra,
 });
 
-const bancoDe = (uid) => (uid ? ambiente.authenticatedContext(uid) : ambiente.unauthenticatedContext()).firestore();
+const FOTO_GOOGLE = 'https://lh3.googleusercontent.com/a/foto';
+
+/** Banco visto por alguém logado com Google (padrão), outro provedor ou sem login (uid null). */
+function bancoDe(uid, { provedor = 'google.com', verificado = true, email = `${uid}@x.com` } = {}) {
+  if (!uid) return ambiente.unauthenticatedContext().firestore();
+  return ambiente
+    .authenticatedContext(uid, { email, email_verified: verificado, firebase: { sign_in_provider: provedor } })
+    .firestore();
+}
 
 before(async () => {
   ambiente = await initializeTestEnvironment({
@@ -44,7 +53,7 @@ beforeEach(async () => {
   await ambiente.withSecurityRulesDisabled(async (ctx) => {
     const db = ctx.firestore();
     await setDoc(doc(db, 'divisoes/div1'), { nome: '1ª Divisão', cor: '#004AAD', ordem: 1 });
-    await setDoc(doc(db, 'times/t1'), { ...time(), atualizadoEm: new Date() });
+    await setDoc(doc(db, 'times/t1'), { ...time('admin'), atualizadoEm: new Date() });
     for (const [uid, papel] of [['criador', 'criador'], ['admin', 'admin'], ['usuario', 'usuario']]) {
       await setDoc(doc(db, `usuarios/${uid}`), { nome: uid, email: `${uid}@x.com`, foto: '', papel, criadoEm: new Date() });
     }
@@ -61,7 +70,7 @@ test('qualquer pessoa, mesmo sem login, lê a tabela', async () => {
 test('visitante e usuário não editam nada', async () => {
   for (const uid of [null, 'usuario', 'desconhecido']) {
     const db = bancoDe(uid);
-    await assertFails(setDoc(doc(db, 'times/novo'), time()));
+    await assertFails(setDoc(doc(db, 'times/novo'), time(uid ?? '')));
     await assertFails(updateDoc(doc(db, 'times/t1'), { nome: 'Hackeado' }));
     await assertFails(deleteDoc(doc(db, 'times/t1')));
     await assertFails(setDoc(doc(db, 'divisoes/x'), { nome: 'X', cor: '#000000', ordem: 9 }));
@@ -72,8 +81,8 @@ test('visitante e usuário não editam nada', async () => {
 test('admin e criador editam times, divisões e título', async () => {
   for (const uid of ['admin', 'criador']) {
     const db = bancoDe(uid);
-    await assertSucceeds(setDoc(doc(db, `times/novo-${uid}`), time()));
-    await assertSucceeds(setDoc(doc(db, 'times/t1'), time({ nome: `Editado por ${uid}` })));
+    await assertSucceeds(setDoc(doc(db, `times/novo-${uid}`), time(uid)));
+    await assertSucceeds(setDoc(doc(db, 'times/t1'), time(uid, { nome: `Editado por ${uid}` })));
     await assertSucceeds(setDoc(doc(db, `divisoes/d-${uid}`), { nome: 'Nova', cor: '#123456', ordem: 9 }));
     await assertSucceeds(deleteDoc(doc(db, `divisoes/d-${uid}`)));
     await assertSucceeds(setDoc(doc(db, 'config/geral'), { titulo: 'Society 2027', subtitulo: 'Campeonato' }));
@@ -83,12 +92,12 @@ test('admin e criador editam times, divisões e título', async () => {
 
 test('dados de time inválidos são recusados', async () => {
   const db = bancoDe('admin');
-  await assertFails(setDoc(doc(db, 'times/a'), time({ nome: '' })));
-  await assertFails(setDoc(doc(db, 'times/b'), time({ divisaoId: 'nao-existe' })));
-  await assertFails(setDoc(doc(db, 'times/c'), time({ cores: [] })));
-  await assertFails(setDoc(doc(db, 'times/d'), time({ cores: [{ nome: 'X', hex: 'red' }] })));
-  await assertFails(setDoc(doc(db, 'times/e'), time({ cores: Array(4).fill({ nome: 'Preto', hex: '#111111' }) })));
-  await assertFails(setDoc(doc(db, 'times/f'), time({ extra: true })));
+  await assertFails(setDoc(doc(db, 'times/a'), time('admin', { nome: '' })));
+  await assertFails(setDoc(doc(db, 'times/b'), time('admin', { divisaoId: 'nao-existe' })));
+  await assertFails(setDoc(doc(db, 'times/c'), time('admin', { cores: [] })));
+  await assertFails(setDoc(doc(db, 'times/d'), time('admin', { cores: [{ nome: 'X', hex: 'red' }] })));
+  await assertFails(setDoc(doc(db, 'times/e'), time('admin', { cores: Array(4).fill({ nome: 'Preto', hex: '#111111' }) })));
+  await assertFails(setDoc(doc(db, 'times/f'), time('admin', { extra: true })));
 });
 
 test('importação da tabela inicial passa em um único lote', async () => {
@@ -106,7 +115,7 @@ test('importação da tabela inicial passa em um único lote', async () => {
 });
 
 test('primeiro login cria perfil apenas como usuário', async () => {
-  const perfil = { nome: 'Novo', email: 'novo@x.com', foto: '', criadoEm: serverTimestamp() };
+  const perfil = { nome: 'Novo', email: 'novo@x.com', foto: FOTO_GOOGLE, criadoEm: serverTimestamp() };
   const db = bancoDe('novo');
   await assertFails(setDoc(doc(db, 'usuarios/novo'), { ...perfil, papel: 'admin' }));
   await assertFails(setDoc(doc(db, 'usuarios/novo'), { ...perfil, papel: 'criador' }));
@@ -118,7 +127,7 @@ test('ninguém muda o próprio papel', async () => {
   const tentativas = { usuario: 'admin', admin: 'criador', criador: 'usuario' };
   for (const [uid, papel] of Object.entries(tentativas)) {
     await assertFails(updateDoc(doc(bancoDe(uid), `usuarios/${uid}`), { papel }));
-    await assertSucceeds(updateDoc(doc(bancoDe(uid), `usuarios/${uid}`), { nome: 'Nome Novo', foto: 'https://x/y.png' }));
+    await assertSucceeds(updateDoc(doc(bancoDe(uid), `usuarios/${uid}`), { nome: 'Nome Novo', foto: FOTO_GOOGLE }));
   }
 });
 
@@ -139,4 +148,43 @@ test('lista de usuários é visível só para o criador', async () => {
   await assertFails(getDocs(collection(bancoDe('usuario'), 'usuarios')));
   await assertSucceeds(getDoc(doc(bancoDe('usuario'), 'usuarios/usuario')));
   await assertFails(getDoc(doc(bancoDe('usuario'), 'usuarios/admin')));
+});
+
+// ---------- Ataques encontrados na auditoria de segurança ----------
+
+test('conta de e-mail/senha ou anônima não vale nada, mesmo com perfil de admin', async () => {
+  await ambiente.withSecurityRulesDisabled((ctx) =>
+    setDoc(doc(ctx.firestore(), 'usuarios/invasor'), { nome: 'invasor', email: 'invasor@x.com', foto: '', papel: 'admin', criadoEm: new Date() }),
+  );
+  for (const opcoes of [{ provedor: 'password' }, { provedor: 'anonymous' }, { verificado: false }]) {
+    const db = bancoDe('invasor', opcoes);
+    await assertFails(setDoc(doc(db, 'times/x'), time('invasor')));
+    await assertFails(deleteDoc(doc(db, 'times/t1')));
+    await assertFails(getDoc(doc(db, 'usuarios/invasor')));
+  }
+  const perfil = { nome: 'João', email: 'joao@gmail.com', foto: '', papel: 'usuario', criadoEm: serverTimestamp() };
+  await assertFails(setDoc(doc(bancoDe('falso', { provedor: 'password', email: 'joao@gmail.com' }), 'usuarios/falso'), perfil));
+});
+
+test('ninguém se passa por outra pessoa na tela Equipe', async () => {
+  const db = bancoDe('novo'); // conta Google novo@x.com
+  const perfil = { nome: 'Novo', foto: '', papel: 'usuario', criadoEm: serverTimestamp() };
+  await assertFails(setDoc(doc(db, 'usuarios/novo'), { ...perfil, email: 'otavio@gmail.com' }));
+  await assertSucceeds(setDoc(doc(db, 'usuarios/novo'), { ...perfil, email: 'novo@x.com' }));
+  await assertFails(updateDoc(doc(db, 'usuarios/novo'), { email: 'otavio@gmail.com' }));
+});
+
+test('foto de perfil só pode vir do Google (sem rastreador)', async () => {
+  const db = bancoDe('usuario');
+  for (const foto of ['https://invasor.com/rastreio.png', 'http://lh3.googleusercontent.com/a', 'https://googleusercontent.com.invasor.com/a']) {
+    await assertFails(updateDoc(doc(db, 'usuarios/usuario'), { foto }));
+  }
+  await assertSucceeds(updateDoc(doc(db, 'usuarios/usuario'), { foto: FOTO_GOOGLE }));
+  await assertSucceeds(updateDoc(doc(db, 'usuarios/usuario'), { foto: '' }));
+});
+
+test('admin não assina alteração com o nome de outra pessoa', async () => {
+  const db = bancoDe('admin');
+  await assertFails(setDoc(doc(db, 'times/t1'), time('criador')));
+  await assertSucceeds(setDoc(doc(db, 'times/t1'), time('admin')));
 });
