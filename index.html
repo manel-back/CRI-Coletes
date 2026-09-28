@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>CRI Coletes</title>
+    <meta name="description" content="Cores dos uniformes dos times do campeonato do CRI." />
+    <meta name="theme-color" content="#F4F6F5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0E1411" media="(prefers-color-scheme: dark)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="CRI Coletes" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/png" href="/icons/favicon-64.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/src/estilo.css" />
+  </head>
+  <body>
+    <header class="topo">
+      <a class="marca" href="#/" aria-label="Início">
+        <img src="/icons/icone-192.png" alt="" width="44" height="44" />
+        <span>
+          <small id="subtitulo"></small>
+          <strong id="titulo"></strong>
+        </span>
+      </a>
+      <button class="botao-conta" id="botao-conta" type="button" aria-label="Minha conta"></button>
+    </header>
+
+    <div class="busca">
+      <label class="campo-busca">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+        <input id="busca" type="search" placeholder="Buscar time ou cor" autocomplete="off" enterkeyhint="search" aria-label="Buscar time ou cor" />
+        <button id="limpar-busca" type="button" aria-label="Limpar busca" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+        </button>
+      </label>
+    </div>
+
+    <div id="aviso" class="aviso" hidden></div>
+    <main id="conteudo"></main>
+
+    <dialog id="folha" class="folha"></dialog>
+    <div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

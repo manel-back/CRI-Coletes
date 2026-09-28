@@ -1,0 +1,100 @@
+rules_version = '2';
+
+// Permissões do CRI Coletes
+//   Visitante (sem login) e Usuário: só leem a tabela.
+//   Administrador: edita times, divisões e o título do campeonato.
+//   Criador: tudo do administrador + promove/rebaixa usuários (usuario <-> admin).
+// O papel "criador" nunca pode ser dado pelo site: é definido uma única vez no Console do Firebase.
+
+service cloud.firestore {
+  match /databases/{banco}/documents {
+
+    function papel() {
+      let caminho = /databases/$(banco)/documents/usuarios/$(request.auth.uid);
+      return request.auth != null && exists(caminho) ? get(caminho).data.papel : 'visitante';
+    }
+
+    function ehAdmin() {
+      return papel() in ['admin', 'criador'];
+    }
+
+    function texto(valor, max) {
+      return valor is string && valor.size() > 0 && valor.size() <= max;
+    }
+
+    function hex(valor) {
+      return valor is string && valor.matches('^#[0-9A-Fa-f]{6}$');
+    }
+
+    function corValida(cor) {
+      return cor is map && cor.keys().hasOnly(['nome', 'hex']) && texto(cor.nome, 30) && hex(cor.hex);
+    }
+
+    function timeValido(d) {
+      return d.keys().hasOnly(['nome', 'divisaoId', 'cores', 'atualizadoEm', 'atualizadoPor'])
+        && texto(d.nome, 60)
+        && d.divisaoId is string
+        && existsAfter(/databases/$(banco)/documents/divisoes/$(d.divisaoId))
+        && d.cores is list && d.cores.size() >= 1 && d.cores.size() <= 3
+        && corValida(d.cores[0])
+        && (d.cores.size() < 2 || corValida(d.cores[1]))
+        && (d.cores.size() < 3 || corValida(d.cores[2]))
+        && d.atualizadoEm == request.time
+        && d.atualizadoPor is string && d.atualizadoPor.size() <= 100;
+    }
+
+    function divisaoValida(d) {
+      return d.keys().hasOnly(['nome', 'cor', 'ordem'])
+        && texto(d.nome, 30) && hex(d.cor) && d.ordem is number;
+    }
+
+    match /divisoes/{id} {
+      allow read: if true;
+      allow create, update: if ehAdmin() && divisaoValida(request.resource.data);
+      allow delete: if ehAdmin();
+    }
+
+    match /times/{id} {
+      allow read: if true;
+      allow create, update: if ehAdmin() && timeValido(request.resource.data);
+      allow delete: if ehAdmin();
+    }
+
+    match /config/geral {
+      allow read: if true;
+      allow write: if ehAdmin()
+        && request.resource.data.keys().hasOnly(['titulo', 'subtitulo'])
+        && texto(request.resource.data.titulo, 40)
+        && request.resource.data.subtitulo is string && request.resource.data.subtitulo.size() <= 40;
+    }
+
+    match /usuarios/{uid} {
+      // Cada um lê o próprio perfil; o criador lê todos (tela Equipe).
+      allow read: if request.auth != null && (request.auth.uid == uid || papel() == 'criador');
+
+      // Primeiro login: o perfil nasce sempre como "usuario".
+      allow create: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['nome', 'email', 'foto', 'papel', 'criadoEm'])
+        && request.resource.data.papel == 'usuario'
+        && request.resource.data.criadoEm == request.time
+        && texto(request.resource.data.nome, 100)
+        && request.resource.data.email is string && request.resource.data.foto is string;
+
+      allow update: if request.auth != null && (
+        // A própria pessoa só atualiza nome, e-mail e foto (nunca o papel).
+        (request.auth.uid == uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nome', 'email', 'foto'])
+          && texto(request.resource.data.nome, 100)
+          && request.resource.data.email is string && request.resource.data.foto is string)
+        ||
+        // O criador promove/rebaixa outras pessoas entre usuario e admin.
+        (papel() == 'criador' && request.auth.uid != uid
+          && resource.data.papel in ['usuario', 'admin']
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['papel'])
+          && request.resource.data.papel in ['usuario', 'admin'])
+      );
+
+      allow delete: if false;
+    }
+  }
+}
